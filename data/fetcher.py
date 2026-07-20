@@ -10,6 +10,28 @@ import os
 import sqlite3
 from datetime import datetime, timedelta
 
+# 强制禁用所有代理
+os.environ["HTTP_PROXY"] = ""
+os.environ["HTTPS_PROXY"] = ""
+os.environ["http_proxy"] = ""
+os.environ["https_proxy"] = ""
+os.environ["NO_PROXY"] = "*"
+
+import urllib.request
+def _no_proxies():
+    return {}
+urllib.request.getproxies = _no_proxies
+
+try:
+    import requests
+    _orig_request = requests.Session.request
+    def _no_proxy_request(self, *args, **kwargs):
+        kwargs["proxies"] = {"http": None, "https": None}
+        return _orig_request(self, *args, **kwargs)
+    requests.Session.request = _no_proxy_request
+except Exception:
+    pass
+
 DB_PATH = os.path.join(os.path.dirname(__file__), "market_data.db")
 
 
