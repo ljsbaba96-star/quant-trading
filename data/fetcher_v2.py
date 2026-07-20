@@ -9,6 +9,12 @@ import os
 import sqlite3
 from datetime import datetime, timedelta
 
+# 绕过代理（本地直连）
+os.environ["HTTP_PROXY"] = ""
+os.environ["HTTPS_PROXY"] = ""
+os.environ["http_proxy"] = ""
+os.environ["https_proxy"] = ""
+
 DB_PATH = os.path.join(os.path.dirname(__file__), "market_data.db")
 
 
